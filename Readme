@@ -1,0 +1,6 @@
+Tradeoffs between Time and Accuracy.
+Not just one point evaluation.
+Always calculate time, accuracy and the energy, gpu usage for each run.
+
+Do a Computer Vision task like classification or segmentation.
+
