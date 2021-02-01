@@ -1,6 +1,14 @@
-Tradeoffs between Time and Accuracy.
-Not just one point evaluation.
-Always calculate time, accuracy and the energy, gpu usage for each run.
+Pytorch Implementation of Imagenet classification using RBGP Framework:
 
-Do a Computer Vision task like classification or segmentation.
+How to run: 
+  
+  1. Run the batch_run.py file to generate the complete command(along with arguments generated as per the values).
+  2. Change the values of the preferred model in the batch_run file along with the learning rates, epochs and outer, inner sparsities etc. 
+  3. Now copy the command and paste it into the terminal which will run the main.py file 
+  
+Models Trained:
+  1. Support for all Resnet variations and mobilenets is present. 
+  2. Have successfully run on resnet18 and MobileNetV2 on imagenet along with resnet50 and resnet18 for CIFAR datasets. 
+  
+  
 
