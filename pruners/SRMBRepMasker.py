@@ -4,7 +4,31 @@ import json
 
 import torch
 
-from .Pruner import Pruner
+# from .Pruner import Pruner
+
+class Pruner(object):
+	"""Super class for pruner"""
+	def __init__(self, config_fp, on_gpu):
+		super(Pruner, self).__init__()
+		self.config_fp = config_fp
+		self.on_gpu = on_gpu
+		# Masks for each layer
+		self.mask_dict = collections.OrderedDict()
+		# Pruning configurations for each layer
+		self.layer_configs = self.parse_config_file(config_fp)
+
+	def apply_masks(self, model):
+		with torch.no_grad():
+			for layer in self.mask_dict:
+				model.state_dict()[layer] *= self.mask_dict[layer]
+
+	def print_stats(self):
+		for layer in self.mask_dict:
+			mask = self.mask_dict[layer]
+			mask_np = mask.cpu().numpy()
+			sp   = 1.0 - np.count_nonzero(mask_np)/mask_np.size
+			print(layer, "sparsity = {}".format(sp*100))
+
 
 class SRMBRepMaskerConfig():
 	def __init__(self, obh, obw, cbh, cbw, ibh, ibw, osp, opat, isp, ipat, is_repetitive, collapse_tensor, cross_prob, is_symmetric):
@@ -166,6 +190,7 @@ class SRMBRepMasker(Pruner):
 				colInds = np.random.choice(N, nnz_per_row, replace=False)
 				mask[i,colInds] = 1
 		elif pattern == "RAMANUJAN":
+			
 			mask = SRMBRepMasker.get_ramanujan_pattern(M, N, nnz_per_row, cross_prob, is_symmetric)
 		elif pattern == "TRANS":
 			assert(nnz%M == 0)
@@ -382,3 +407,5 @@ class SRMBRepMasker(Pruner):
 		print(np.sum(mask, axis=0).reshape(-1))
 		print(np.sum(mask, axis=1).reshape(-1))
 		print(np.sum(mask))
+
+# SRMBRepMasker.test()

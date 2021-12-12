@@ -1,0 +1,121 @@
+Num of gpus per node 1
+Use GPU: 0 for training
+=> creating model 'resnet18'
+Using sample_configs/cifar_resnet18_hb_pconfig.json configuration file for generating structure.
+Generating mask for layer module.layer1.0.conv1.weight
+Generating mask for layer module.layer1.0.conv2.weight
+Generating mask for layer module.layer1.1.conv1.weight
+Generating mask for layer module.layer1.1.conv2.weight
+Generating mask for layer module.layer2.0.conv1.weight
+Generating mask for layer module.layer2.0.conv2.weight
+Generating mask for layer module.layer2.0.downsample.0.weight
+Generating mask for layer module.layer2.1.conv1.weight
+Generating mask for layer module.layer2.1.conv2.weight
+Generating mask for layer module.layer3.0.conv1.weight
+Generating mask for layer module.layer3.0.conv2.weight
+Generating mask for layer module.layer3.0.downsample.0.weight
+Generating mask for layer module.layer3.1.conv1.weight
+Generating mask for layer module.layer3.1.conv2.weight
+Generating mask for layer module.layer4.0.conv1.weight
+Generating mask for layer module.layer4.0.conv2.weight
+Generating mask for layer module.layer4.0.downsample.0.weight
+Generating mask for layer module.layer4.1.conv1.weight
+Generating mask for layer module.layer4.1.conv2.weight
+module.layer1.0.conv1.weight sparsity = 75.0
+module.layer1.0.conv2.weight sparsity = 75.0
+module.layer1.1.conv1.weight sparsity = 75.0
+module.layer1.1.conv2.weight sparsity = 75.0
+module.layer2.0.conv1.weight sparsity = 75.0
+module.layer2.0.conv2.weight sparsity = 75.0
+module.layer2.0.downsample.0.weight sparsity = 75.0
+module.layer2.1.conv1.weight sparsity = 75.0
+module.layer2.1.conv2.weight sparsity = 75.0
+module.layer3.0.conv1.weight sparsity = 75.0
+module.layer3.0.conv2.weight sparsity = 75.0
+module.layer3.0.downsample.0.weight sparsity = 75.0
+module.layer3.1.conv1.weight sparsity = 75.0
+module.layer3.1.conv2.weight sparsity = 75.0
+module.layer4.0.conv1.weight sparsity = 75.0
+module.layer4.0.conv2.weight sparsity = 75.0
+module.layer4.0.downsample.0.weight sparsity = 75.0
+module.layer4.1.conv1.weight sparsity = 75.0
+module.layer4.1.conv2.weight sparsity = 75.0
+Reinitializing CONV module.layer1.0.conv1.weight wrt sparsity
+Reinitializing CONV module.layer1.0.conv2.weight wrt sparsity
+Reinitializing CONV module.layer1.1.conv1.weight wrt sparsity
+Reinitializing CONV module.layer1.1.conv2.weight wrt sparsity
+Reinitializing CONV module.layer2.0.conv1.weight wrt sparsity
+Reinitializing CONV module.layer2.0.conv2.weight wrt sparsity
+Reinitializing CONV module.layer2.0.downsample.0.weight wrt sparsity
+Reinitializing CONV module.layer2.1.conv1.weight wrt sparsity
+Reinitializing CONV module.layer2.1.conv2.weight wrt sparsity
+Reinitializing CONV module.layer3.0.conv1.weight wrt sparsity
+Reinitializing CONV module.layer3.0.conv2.weight wrt sparsity
+Reinitializing CONV module.layer3.0.downsample.0.weight wrt sparsity
+Reinitializing CONV module.layer3.1.conv1.weight wrt sparsity
+Reinitializing CONV module.layer3.1.conv2.weight wrt sparsity
+Reinitializing CONV module.layer4.0.conv1.weight wrt sparsity
+Reinitializing CONV module.layer4.0.conv2.weight wrt sparsity
+Reinitializing CONV module.layer4.0.downsample.0.weight wrt sparsity
+Reinitializing CONV module.layer4.1.conv1.weight wrt sparsity
+Reinitializing CONV module.layer4.1.conv2.weight wrt sparsity
+Applying masking before training begins
+Epoch: [0][    0/10010]	Time 19.577 (19.577)	Data 17.789 (17.789)	Loss 7.0713e+00 (7.0713e+00)	Acc@1   0.00 (  0.00)	Acc@5   0.78 (  0.78)
+Epoch: [0][   10/10010]	Time  0.170 ( 1.954)	Data  0.000 ( 1.658)	Loss 7.0787e+00 (7.0502e+00)	Acc@1   0.78 (  0.07)	Acc@5   0.78 (  0.57)
+Epoch: [0][   20/10010]	Time  1.669 ( 1.325)	Data  1.593 ( 1.123)	Loss 7.0137e+00 (7.0325e+00)	Acc@1   0.00 (  0.07)	Acc@5   0.78 (  0.71)
+Epoch: [0][   30/10010]	Time  0.327 ( 1.100)	Data  0.259 ( 0.934)	Loss 7.0731e+00 (7.0265e+00)	Acc@1   0.00 (  0.05)	Acc@5   0.00 (  0.66)
+Epoch: [0][   40/10010]	Time  2.013 ( 1.020)	Data  1.927 ( 0.872)	Loss 7.0007e+00 (7.0224e+00)	Acc@1   0.00 (  0.06)	Acc@5   0.78 (  0.71)
+Epoch: [0][   50/10010]	Time  0.158 ( 0.932)	Data  0.000 ( 0.788)	Loss 6.9304e+00 (7.0230e+00)	Acc@1   0.00 (  0.05)	Acc@5   0.00 (  0.61)
+Epoch: [0][   60/10010]	Time  2.066 ( 0.898)	Data  1.982 ( 0.759)	Loss 7.0293e+00 (7.0206e+00)	Acc@1   0.00 (  0.04)	Acc@5   0.00 (  0.58)
+Epoch: [0][   70/10010]	Time  0.263 ( 0.850)	Data  0.173 ( 0.715)	Loss 7.0073e+00 (7.0168e+00)	Acc@1   0.78 (  0.06)	Acc@5   0.78 (  0.55)
+Epoch: [0][   80/10010]	Time  1.245 ( 0.829)	Data  1.172 ( 0.700)	Loss 7.0465e+00 (7.0139e+00)	Acc@1   0.00 (  0.06)	Acc@5   0.00 (  0.53)
+Epoch: [0][   90/10010]	Time  0.765 ( 0.808)	Data  0.681 ( 0.683)	Loss 6.9267e+00 (7.0078e+00)	Acc@1   0.00 (  0.08)	Acc@5   0.00 (  0.57)
+Epoch: [0][  100/10010]	Time  0.177 ( 0.788)	Data  0.042 ( 0.665)	Loss 6.9753e+00 (7.0041e+00)	Acc@1   0.78 (  0.08)	Acc@5   1.56 (  0.56)
+Epoch: [0][  110/10010]	Time  1.013 ( 0.781)	Data  0.941 ( 0.661)	Loss 7.0260e+00 (7.0008e+00)	Acc@1   0.00 (  0.09)	Acc@5   1.56 (  0.58)
+Epoch: [0][  120/10010]	Time  0.172 ( 0.763)	Data  0.049 ( 0.643)	Loss 6.9605e+00 (6.9963e+00)	Acc@1   0.00 (  0.09)	Acc@5   0.00 (  0.55)
+Epoch: [0][  130/10010]	Time  1.412 ( 0.779)	Data  1.324 ( 0.660)	Loss 6.9673e+00 (6.9930e+00)	Acc@1   0.00 (  0.10)	Acc@5   0.00 (  0.55)
+Epoch: [0][  140/10010]	Time  0.161 ( 0.763)	Data  0.000 ( 0.644)	Loss 6.9979e+00 (6.9898e+00)	Acc@1   0.00 (  0.11)	Acc@5   0.00 (  0.58)
+Epoch: [0][  150/10010]	Time  1.908 ( 0.763)	Data  1.836 ( 0.644)	Loss 6.9894e+00 (6.9887e+00)	Acc@1   0.00 (  0.10)	Acc@5   0.00 (  0.55)
+Epoch: [0][  160/10010]	Time  0.170 ( 0.746)	Data  0.000 ( 0.627)	Loss 6.9113e+00 (6.9861e+00)	Acc@1   0.78 (  0.11)	Acc@5   0.78 (  0.53)
+Epoch: [0][  170/10010]	Time  4.265 ( 0.758)	Data  4.193 ( 0.638)	Loss 6.9347e+00 (6.9834e+00)	Acc@1   0.00 (  0.11)	Acc@5   0.00 (  0.54)
+Epoch: [0][  180/10010]	Time  0.177 ( 0.749)	Data  0.000 ( 0.628)	Loss 6.9325e+00 (6.9813e+00)	Acc@1   0.00 (  0.10)	Acc@5   0.00 (  0.56)
+Epoch: [0][  190/10010]	Time  1.999 ( 0.748)	Data  1.918 ( 0.627)	Loss 6.8950e+00 (6.9791e+00)	Acc@1   0.00 (  0.11)	Acc@5   0.78 (  0.56)
+Epoch: [0][  200/10010]	Time  0.182 ( 0.739)	Data  0.109 ( 0.618)	Loss 6.9769e+00 (6.9766e+00)	Acc@1   0.00 (  0.11)	Acc@5   0.00 (  0.56)
+Epoch: [0][  210/10010]	Time  4.670 ( 0.751)	Data  4.598 ( 0.630)	Loss 6.8872e+00 (6.9744e+00)	Acc@1   0.00 (  0.11)	Acc@5   0.00 (  0.57)
+Epoch: [0][  220/10010]	Time  0.167 ( 0.746)	Data  0.000 ( 0.624)	Loss 6.9579e+00 (6.9723e+00)	Acc@1   0.00 (  0.12)	Acc@5   0.78 (  0.57)
+Epoch: [0][  230/10010]	Time  2.219 ( 0.749)	Data  2.143 ( 0.627)	Loss 6.9160e+00 (6.9706e+00)	Acc@1   0.78 (  0.12)	Acc@5   1.56 (  0.56)
+Epoch: [0][  240/10010]	Time  0.177 ( 0.742)	Data  0.000 ( 0.619)	Loss 6.9297e+00 (6.9695e+00)	Acc@1   0.00 (  0.12)	Acc@5   0.78 (  0.57)
+Epoch: [0][  250/10010]	Time  2.120 ( 0.743)	Data  2.046 ( 0.620)	Loss 6.9295e+00 (6.9684e+00)	Acc@1   0.00 (  0.11)	Acc@5   0.00 (  0.58)
+Epoch: [0][  260/10010]	Time  0.159 ( 0.746)	Data  0.000 ( 0.622)	Loss 6.9465e+00 (6.9671e+00)	Acc@1   0.78 (  0.12)	Acc@5   1.56 (  0.57)
+Epoch: [0][  270/10010]	Time  2.077 ( 0.744)	Data  1.997 ( 0.620)	Loss 6.9891e+00 (6.9657e+00)	Acc@1   0.00 (  0.12)	Acc@5   0.00 (  0.58)
+Epoch: [0][  280/10010]	Time  0.165 ( 0.737)	Data  0.000 ( 0.613)	Loss 6.9332e+00 (6.9638e+00)	Acc@1   0.00 (  0.12)	Acc@5   0.78 (  0.57)
+Epoch: [0][  290/10010]	Time  2.853 ( 0.739)	Data  2.767 ( 0.614)	Loss 6.8882e+00 (6.9629e+00)	Acc@1   0.00 (  0.12)	Acc@5   3.12 (  0.58)
+Epoch: [0][  300/10010]	Time  0.169 ( 0.734)	Data  0.000 ( 0.609)	Loss 6.8903e+00 (6.9611e+00)	Acc@1   0.00 (  0.12)	Acc@5   1.56 (  0.59)
+Epoch: [0][  310/10010]	Time  2.091 ( 0.733)	Data  2.015 ( 0.609)	Loss 6.8970e+00 (6.9597e+00)	Acc@1   0.00 (  0.11)	Acc@5   0.00 (  0.59)
+Epoch: [0][  320/10010]	Time  0.161 ( 0.728)	Data  0.000 ( 0.604)	Loss 6.9031e+00 (6.9585e+00)	Acc@1   0.00 (  0.11)	Acc@5   0.78 (  0.60)
+Epoch: [0][  330/10010]	Time  0.497 ( 0.726)	Data  0.414 ( 0.603)	Loss 6.8917e+00 (6.9569e+00)	Acc@1   0.00 (  0.12)	Acc@5   0.78 (  0.62)
+Epoch: [0][  340/10010]	Time  0.171 ( 0.733)	Data  0.000 ( 0.609)	Loss 6.8837e+00 (6.9559e+00)	Acc@1   0.00 (  0.12)	Acc@5   1.56 (  0.62)
+Epoch: [0][  350/10010]	Time  0.159 ( 0.729)	Data  0.000 ( 0.604)	Loss 6.9358e+00 (6.9548e+00)	Acc@1   0.78 (  0.12)	Acc@5   0.78 (  0.62)
+Epoch: [0][  360/10010]	Time  0.167 ( 0.730)	Data  0.000 ( 0.606)	Loss 6.8977e+00 (6.9535e+00)	Acc@1   0.00 (  0.12)	Acc@5   0.00 (  0.61)
+Epoch: [0][  370/10010]	Time  0.168 ( 0.725)	Data  0.000 ( 0.600)	Loss 6.9364e+00 (6.9523e+00)	Acc@1   0.00 (  0.12)	Acc@5   0.78 (  0.61)
+Epoch: [0][  380/10010]	Time  0.188 ( 0.732)	Data  0.000 ( 0.607)	Loss 6.9220e+00 (6.9514e+00)	Acc@1   0.00 (  0.11)	Acc@5   1.56 (  0.61)
+Epoch: [0][  390/10010]	Time  0.169 ( 0.727)	Data  0.000 ( 0.601)	Loss 6.9097e+00 (6.9502e+00)	Acc@1   0.00 (  0.11)	Acc@5   0.00 (  0.60)
+Epoch: [0][  400/10010]	Time  0.163 ( 0.729)	Data  0.000 ( 0.602)	Loss 6.8981e+00 (6.9493e+00)	Acc@1   0.00 (  0.11)	Acc@5   0.78 (  0.61)
+Epoch: [0][  410/10010]	Time  0.138 ( 0.724)	Data  0.000 ( 0.598)	Loss 6.9067e+00 (6.9481e+00)	Acc@1   0.00 (  0.11)	Acc@5   2.34 (  0.63)
+Epoch: [0][  420/10010]	Time  0.147 ( 0.729)	Data  0.000 ( 0.602)	Loss 6.8953e+00 (6.9471e+00)	Acc@1   0.00 (  0.11)	Acc@5   1.56 (  0.63)
+Epoch: [0][  430/10010]	Time  0.154 ( 0.725)	Data  0.000 ( 0.598)	Loss 6.8818e+00 (6.9462e+00)	Acc@1   0.00 (  0.11)	Acc@5   0.78 (  0.63)
+Epoch: [0][  440/10010]	Time  0.157 ( 0.726)	Data  0.000 ( 0.599)	Loss 6.8863e+00 (6.9450e+00)	Acc@1   0.00 (  0.11)	Acc@5   0.00 (  0.62)
+Epoch: [0][  450/10010]	Time  0.171 ( 0.722)	Data  0.000 ( 0.594)	Loss 6.8565e+00 (6.9440e+00)	Acc@1   0.00 (  0.11)	Acc@5   0.00 (  0.62)
+Epoch: [0][  460/10010]	Time  0.158 ( 0.722)	Data  0.000 ( 0.594)	Loss 6.8804e+00 (6.9430e+00)	Acc@1   0.78 (  0.12)	Acc@5   0.78 (  0.63)
+Epoch: [0][  470/10010]	Time  0.163 ( 0.723)	Data  0.000 ( 0.595)	Loss 6.8803e+00 (6.9420e+00)	Acc@1   0.78 (  0.12)	Acc@5   0.78 (  0.64)
+Epoch: [0][  480/10010]	Time  0.614 ( 0.725)	Data  0.539 ( 0.597)	Loss 6.9116e+00 (6.9413e+00)	Acc@1   0.00 (  0.12)	Acc@5   1.56 (  0.64)
+Epoch: [0][  490/10010]	Time  0.167 ( 0.723)	Data  0.000 ( 0.595)	Loss 6.9010e+00 (6.9406e+00)	Acc@1   0.00 (  0.12)	Acc@5   0.78 (  0.64)
+Epoch: [0][  500/10010]	Time  1.039 ( 0.723)	Data  0.963 ( 0.596)	Loss 6.8970e+00 (6.9396e+00)	Acc@1   0.78 (  0.12)	Acc@5   0.78 (  0.64)
+Epoch: [0][  510/10010]	Time  0.168 ( 0.724)	Data  0.000 ( 0.597)	Loss 6.8695e+00 (6.9387e+00)	Acc@1   0.00 (  0.12)	Acc@5   0.78 (  0.64)
+Epoch: [0][  520/10010]	Time  0.704 ( 0.723)	Data  0.627 ( 0.596)	Loss 6.8781e+00 (6.9378e+00)	Acc@1   0.00 (  0.12)	Acc@5   2.34 (  0.65)
+Epoch: [0][  530/10010]	Time  0.134 ( 0.720)	Data  0.000 ( 0.594)	Loss 6.8647e+00 (6.9368e+00)	Acc@1   0.00 (  0.13)	Acc@5   0.78 (  0.65)
+Epoch: [0][  540/10010]	Time  1.199 ( 0.720)	Data  1.114 ( 0.594)	Loss 6.9268e+00 (6.9360e+00)	Acc@1   0.78 (  0.13)	Acc@5   0.78 (  0.66)
+Epoch: [0][  550/10010]	Time  0.159 ( 0.718)	Data  0.000 ( 0.591)	Loss 6.8542e+00 (6.9353e+00)	Acc@1   0.00 (  0.13)	Acc@5   2.34 (  0.67)
+Epoch: [0][  560/10010]	Time  0.687 ( 0.722)	Data  0.613 ( 0.596)	Loss 6.8395e+00 (6.9345e+00)	Acc@1   0.78 (  0.13)	Acc@5   0.78 (  0.67)
+Epoch: [0][  570/10010]	Time  0.184 ( 0.719)	Data  0.000 ( 0.593)	Loss 6.9060e+00 (6.9338e+00)	Acc@1   0.00 (  0.13)	Acc@5   0.00 (  0.68)
+Epoch: [0][  580/10010]	Time  1.251 ( 0.720)	Data  1.169 ( 0.594)	Loss 6.9308e+00 (6.9333e+00)	Acc@1   0.00 (  0.13)	Acc@5   0.00 (  0.68)
