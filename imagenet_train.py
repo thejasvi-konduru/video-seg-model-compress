@@ -18,6 +18,8 @@ import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import torchvision.models as models
 
+from torch.utils.tensorboard import SummaryWriter
+
 model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
     and callable(models.__dict__[name]))
@@ -36,7 +38,7 @@ parser.add_argument('--epochs', default=90, type=int, metavar='N',
                     help='number of total epochs to run')
 parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
                     help='manual epoch number (useful on restarts)')
-parser.add_argument('-b', '--batch-size', default=256, type=int,
+parser.add_argument('-b', '--batch-size', default=512, type=int,
                     metavar='N',
                     help='mini-batch size (default: 256), this is the total '
                          'batch size of all GPUs on the current node when '
@@ -73,6 +75,12 @@ parser.add_argument('--multiprocessing-distributed', action='store_true',
                          'N processes per node, which has N GPUs. This is the '
                          'fastest way to use PyTorch for either single node or '
                          'multi node data parallel training')
+
+#For tensorboard logging
+parser.add_argument("--dataset", type=str, default="imagenet", 
+                    help="Dataset to use")
+parser.add_argument("--exp_dir", type=str, default="experiments/",
+                    help="Path to experiment directory", dest="exp_dir")
 
 best_acc1 = 0
 
@@ -115,7 +123,7 @@ def main():
 def main_worker(gpu, ngpus_per_node, args):
     global best_acc1
     args.gpu = gpu
-
+    writer = SummaryWriter("new_runs/rbgp4-"+args.dataset+"-"+args.arch)
     if args.gpu is not None:
         print("Use GPU: {} for training".format(args.gpu))
 
@@ -174,6 +182,7 @@ def main_worker(gpu, ngpus_per_node, args):
                                 momentum=args.momentum,
                                 weight_decay=args.weight_decay)
 
+    exp_dir = args.exp_dir
     # optionally resume from a checkpoint
     if args.resume:
         if os.path.isfile(args.resume):
@@ -242,10 +251,10 @@ def main_worker(gpu, ngpus_per_node, args):
         adjust_learning_rate(optimizer, epoch, args)
 
         # train for one epoch
-        train(train_loader, model, criterion, optimizer, epoch, args)
+        train(train_loader, model, criterion, optimizer, epoch, writer, args)
 
         # evaluate on validation set
-        acc1 = validate(val_loader, model, criterion, args)
+        acc1 = validate(val_loader, model, criterion, epoch, writer, args)
 
         # remember best acc@1 and save checkpoint
         is_best = acc1 > best_acc1
@@ -259,10 +268,14 @@ def main_worker(gpu, ngpus_per_node, args):
                 'state_dict': model.state_dict(),
                 'best_acc1': best_acc1,
                 'optimizer' : optimizer.state_dict(),
-            }, is_best)
+            }, is_best, exp_dir)
+        print("Best top1 acc till epoch {} is {}".format(epoch, best_acc1))
+    
+    print("Best Top-1 accuracy : ", best_acc1)
+    print("Best Top-1 error : ", 100 - best_acc1)
+    writer.close()
 
-
-def train(train_loader, model, criterion, optimizer, epoch, args):
+def train(train_loader, model, criterion, optimizer, epoch, writer, args):
     batch_time = AverageMeter('Time', ':6.3f')
     data_time = AverageMeter('Data', ':6.3f')
     losses = AverageMeter('Loss', ':.4e')
@@ -308,8 +321,16 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         if i % args.print_freq == 0:
             progress.display(i)
 
+    print('Training Epoch : {epoch} * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:.3f}'
+            .format(epoch=epoch, top1=top1, top5=top5))
+    writer.add_scalar('Train Acc 1',
+                        top1.avg, epoch)
+    writer.add_scalar('Train Acc 5',
+                        top5.avg, epoch)
+    writer.add_scalar('Train loss', losses.avg, epoch)
+    writer.flush()
 
-def validate(val_loader, model, criterion, args):
+def validate(val_loader, model, criterion, epoch, writer, args):
     batch_time = AverageMeter('Time', ':6.3f')
     losses = AverageMeter('Loss', ':.4e')
     top1 = AverageMeter('Acc@1', ':6.2f')
@@ -351,13 +372,24 @@ def validate(val_loader, model, criterion, args):
         print(' * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:.3f}'
               .format(top1=top1, top5=top5))
 
+        print('Epoch : {epoch} * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:.3f}'
+              .format(epoch=epoch, top1=top1, top5=top5))
+        writer.add_scalar('Validation Acc 1',
+                            top1.avg, epoch)
+        writer.add_scalar('Validation Acc 5',
+                            top5.avg, epoch)
+        writer.add_scalar('Validation loss', losses.avg, epoch)
+
+    writer.flush()
     return top1.avg
 
 
-def save_checkpoint(state, is_best, filename='checkpoint.pth.tar'):
-    torch.save(state, filename)
+def save_checkpoint(state, is_best, exp_dir='.', filename='checkpoint.pth.tar'):
+    fpath = os.path.join(exp_dir, filename)
+    torch.save(state, fpath)
     if is_best:
-        shutil.copyfile(filename, 'model_best.pth.tar')
+        shutil.copyfile(fpath, os.path.join(exp_dir,'model_best.pth.tar'))
+
 
 
 class AverageMeter(object):

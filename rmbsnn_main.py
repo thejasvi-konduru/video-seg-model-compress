@@ -20,6 +20,7 @@ import torchvision.datasets as datasets
 import torchvision.models as models
 
 import utils
+from torch.utils.tensorboard import SummaryWriter
 
 import lmodels
 import pruners.BlockPruner
@@ -47,7 +48,7 @@ parser.add_argument('-a', '--arch', metavar='ARCH', default='resnet18',
                         ' (default: resnet18)')
 parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
                     help='number of data loading workers (default: 4)')
-parser.add_argument('--epochs', default=200, type=int, metavar='N',
+parser.add_argument('--epochs', default=100, type=int, metavar='N',
                     help='number of total epochs to run')
 parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
                     help='manual epoch number (useful on restarts)')
@@ -89,18 +90,17 @@ parser.add_argument('--multiprocessing-distributed', action='store_true',
                          'fastest way to use PyTorch for either single node or '
                          'multi node data parallel training')
 
-
 #parser.add_argument("--model", type=str, default="vgg16", help="NN model to use.")
 parser.add_argument("--dataset", type=str, default="imagenet", 
                     help="Dataset to use")
-parser.add_argument("--exp-dir", type=str, default="experiments/",
+parser.add_argument("--exp-dir", type=str, default=".",
                     help="Path to experiment directory", dest="exp_dir")
 
 # Pruning related
-parser.add_argument("--mc-pruning", action="store_false", help="Enable model compression using pruning")
+parser.add_argument("--mc-pruning", action="store_true", help="Enable model compression using pruning")
 parser.add_argument("--pr-base-model", type=str, help="Path to base dense model", default=None)
-parser.add_argument("--pr-config-path", type=str, help="Path to pruning configuration file", default="sample_configs/imagenet_resnet50_hb_pconfig.json")
-parser.add_argument("--pr-static", action="store_false", help="Randomly generates structure instead of pruning")
+parser.add_argument("--pr-config-path", type=str, help="Path to pruning configuration file", default=None)
+parser.add_argument("--pr-static", action="store_true", help="Randomly generates structure instead of pruning")
 
 # Knowledge distillation
 parser.add_argument("--mc-kd", action="store_true", help="Enable model compression using knowledge distillation")
@@ -115,7 +115,6 @@ best_acc1 = 0
 
 def main():
     args = parser.parse_args()
-
     # Create experiment directory if does not exists
     import os
     if not os.path.isdir(args.exp_dir):
@@ -141,7 +140,6 @@ def main():
     args.distributed = args.world_size > 1 or args.multiprocessing_distributed
 
     ngpus_per_node = torch.cuda.device_count()
-    print("Num of gpus per node",ngpus_per_node)
     if args.multiprocessing_distributed:
         # Since we have ngpus_per_node processes per node, the total world_size
         # needs to be adjusted accordingly
@@ -157,7 +155,7 @@ def main():
 def main_worker(gpu, ngpus_per_node, args):
     global best_acc1
     args.gpu = gpu
-
+    writer = SummaryWriter("new_runs/rbgp4-"+args.dataset+"-"+args.arch)
     if args.gpu is not None:
         print("Use GPU: {} for training".format(args.gpu))
 
@@ -280,8 +278,15 @@ def main_worker(gpu, ngpus_per_node, args):
                                 weight_decay=args.weight_decay,
                                 nesterov=True)
 
+    milestones = [25,50,75]
+    gamma = 0.1
+    # print("Num of epochs",args.epochs)
     # Learning rate scheduler
-    if args.epochs == 200:
+    if args.epochs == 100: #imagenet
+        ## WRN configuration
+        milestones = [25,50,75]
+        gamma = 0.1
+    elif args.epochs == 200:
         ## WRN configuration
         milestones = [60,120,160]
         gamma = 0.2
@@ -302,8 +307,8 @@ def main_worker(gpu, ngpus_per_node, args):
                 best_acc1 = best_acc1.to(args.gpu)
             model.load_state_dict(checkpoint['state_dict'])
             optimizer.load_state_dict(checkpoint['optimizer'])
-            print("=> loaded checkpoint '{}' (epoch {})"
-                  .format(args.resume, checkpoint['epoch']))
+            print("=> loaded checkpoint '{}' (epoch {}) best_acc1 {}"
+                  .format(args.resume, checkpoint['epoch'], best_acc1))
         else:
             print("=> no checkpoint found at '{}'".format(args.resume))
 
@@ -377,7 +382,6 @@ def main_worker(gpu, ngpus_per_node, args):
                     small_tensor.normal_(0, math.sqrt(2. / n))
                     
                 # Distribute the values to big tensor
-                # tensor[torch.nonzero(mask, as_tuple=True)] = small_tensor.flatten()
                 tensor[torch.nonzero(mask, as_tuple=True)] = small_tensor.flatten()
 
 
@@ -395,10 +399,10 @@ def main_worker(gpu, ngpus_per_node, args):
         #adjust_learning_rate(optimizer, epoch, args)
 
         # train for one epoch
-        train(train_loader, model, criterion, optimizer, epoch, args, pruner, teacher_model)
+        train(train_loader, model, criterion, optimizer, epoch, writer, args, pruner, teacher_model)
 
         # evaluate on validation set
-        acc1 = validate(val_loader, model, criterion, args)
+        acc1 = validate(val_loader, model, criterion, epoch, writer, args)
 
         # Learning rate step
         lr_scheduler.step()
@@ -423,9 +427,9 @@ def main_worker(gpu, ngpus_per_node, args):
 
     print("Best Top-1 accuracy : ", best_acc1)
     print("Best Top-1 error : ", 100 - best_acc1)
+    writer.close()
 
-
-def train(train_loader, model, criterion, optimizer, epoch, args, pruner=None, teacher_model=None):
+def train(train_loader, model, criterion, optimizer, epoch, writer, args, pruner=None, teacher_model=None):
     batch_time = AverageMeter('Time', ':6.3f')
     data_time = AverageMeter('Data', ':6.3f')
     losses = AverageMeter('Loss', ':.4e')
@@ -486,8 +490,16 @@ def train(train_loader, model, criterion, optimizer, epoch, args, pruner=None, t
         if i % args.print_freq == 0:
             progress.display(i)
 
+    print('Training Epoch : {epoch} * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:.3f}'
+            .format(epoch=epoch, top1=top1, top5=top5))
+    writer.add_scalar('Train Acc 1',
+                        top1.avg, epoch)
+    writer.add_scalar('Train Acc 5',
+                        top5.avg, epoch)
+    writer.add_scalar('Train loss', losses.avg, epoch)
+    writer.flush()
 
-def validate(val_loader, model, criterion, args):
+def validate(val_loader, model, criterion, epoch, writer, args):
     batch_time = AverageMeter('Time', ':6.3f')
     losses = AverageMeter('Loss', ':.4e')
     top1 = AverageMeter('Acc@1', ':6.2f')
@@ -514,6 +526,7 @@ def validate(val_loader, model, criterion, args):
             # measure accuracy and record loss
             acc1, acc5 = accuracy(output, target, topk=(1, 5))
             losses.update(loss.item(), images.size(0))
+            
             top1.update(acc1[0], images.size(0))
             top5.update(acc5[0], images.size(0))
 
@@ -525,9 +538,14 @@ def validate(val_loader, model, criterion, args):
                 progress.display(i)
 
         # TODO: this should also be done with the ProgressMeter
-        print(' * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:.3f}'
-              .format(top1=top1, top5=top5))
-
+        print('Epoch : {epoch} * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:.3f}'
+              .format(epoch=epoch, top1=top1, top5=top5))
+        writer.add_scalar('Validation Acc 1',
+                            top1.avg, epoch)
+        writer.add_scalar('Validation Acc 5',
+                            top5.avg, epoch)
+        writer.add_scalar('Validation loss', losses.avg, epoch)
+    writer.flush()
     return top1.avg
 
 
@@ -620,9 +638,6 @@ def adjust_learning_rate(optimizer, epoch, args):
         lr = args.lr * pow(0.1, portion_id)
         """
 
-    
-
-
 def accuracy(output, target, topk=(1,)):
     """Computes the accuracy over the k top predictions for the specified values of k"""
     with torch.no_grad():
@@ -635,7 +650,7 @@ def accuracy(output, target, topk=(1,)):
 
         res = []
         for k in topk:
-            correct_k = correct[:k].view(-1).float().sum(0, keepdim=True)
+            correct_k = correct[:k].reshape(-1).float().sum(0, keepdim=True)
             res.append(correct_k.mul_(100.0 / batch_size))
         return res
 

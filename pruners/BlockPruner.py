@@ -4,8 +4,38 @@ import json
 import numpy as np
 import itertools
 
-from .Pruner import Pruner
-from .utils import write_array_to_file
+# from .Pruner import Pruner
+# from .utils import write_array_to_file
+
+
+def write_array_to_file(array, fh):
+	for element in array:
+		fh.write(str(element) + " ")
+	fh.write("\n")
+
+class Pruner(object):
+	"""Super class for pruner"""
+	def __init__(self, config_fp, on_gpu):
+		super(Pruner, self).__init__()
+		self.config_fp = config_fp
+		self.on_gpu = on_gpu
+		# Masks for each layer
+		self.mask_dict = collections.OrderedDict()
+		# Pruning configurations for each layer
+		self.layer_configs = self.parse_config_file(config_fp)
+
+	def apply_masks(self, model):
+		with torch.no_grad():
+			for layer in self.mask_dict:
+				model.state_dict()[layer] *= self.mask_dict[layer]
+
+	def print_stats(self):
+		for layer in self.mask_dict:
+			mask = self.mask_dict[layer]
+			mask_np = mask.cpu().numpy()
+			sp   = 1.0 - np.count_nonzero(mask_np)/mask_np.size
+			print(layer, "sparsity = {}".format(sp*100))
+
 
 class BlockPrunerConfig:
 	def __init__(self, sparsity, block_height, block_width, sub_rows, sub_cols, collapse_tensor):
@@ -60,7 +90,7 @@ class BlockPruner(Pruner):
 				layer_set = ls_config["layer_set"]
 				for layer in layer_set:
 					layer_configs[layer] = BlockPruner.generate_block_pruner_config(ls_config)
-
+		print(layer_configs)
 		return layer_configs
 
 	def generate_masks(self, model, is_static=False, verbose=False):
@@ -436,3 +466,9 @@ class BlockPruner(Pruner):
 
 		block_mat = BlockPruner.generate_block_matrix(mat*mask, block_height, block_width)
 		BlockPruner.write_block_matrix_to_file(block_mat, filepath="block_test.txt")
+	
+# config_path = "block_config.json"
+
+# BlockPruner.test()
+# pruner = BlockPruner(config_path)
+# pruner.test()
