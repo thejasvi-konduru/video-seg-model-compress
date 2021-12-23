@@ -2,13 +2,13 @@ Pytorch Implementation of Imagenet classification using RBGP Framework:
 
 How to run: 
   
-  1. Run the batch_run.py file to generate the complete command(along with arguments generated as per the values).
-  2. Change the values of the preferred model in the batch_run file along with the learning rates, epochs and outer, inner sparsities etc. 
-  3. Now copy the command and paste it into the terminal which will run the main.py file 
+  1. Run the semseg_*.sh bash file to train the model.
+  2. Change the values of the preferred model in the bash file along with the learning rates, epochs and outer, inner sparsities etc. 
+  3. This will run the semantic_seg.py file to train the model. 
   
 Models Trained:
-  1. Support for all Resnet variations and mobilenets is present. 
-  2. Have successfully run on resnet18 and MobileNetV2 on imagenet along with resnet50 and resnet18 for CIFAR datasets. 
+  1. Support for resnet18 and resnet54 backbone architectures is implemented. 
+  2. Find the tensorboard graphs or log outputs for log files and validation graphs. 
   
   
 
