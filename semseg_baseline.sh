@@ -23,6 +23,7 @@ crop_size='512X512'
 # pconfig_path=sparse_experiments/config.json
 # base_model=base_models/resnet50-19c8e357.pth
 ename=${dataset}_${arch}_${epochs}_${crop_size}
+ename=cityscapes_drn_d_22_100_512X512
 
 #exp_dir=sparse_experiments/rbgp_imagenet_resnet50/sparse_imagenet_resnet50_srmbrep_-1x-1_-1x-1_1x1_0.00-RAMANUJAN_75.00-RAMANUJAN_50.00_collapse_repetitive
 # launch_dir=/home/${USER}/M2020/S2021/rmbsnn/classifier/
@@ -73,3 +74,10 @@ python semseg_baseline.py \
 		--crop_size=${crop_size} --lr=${lr} \
 		-b=${batch_size} \
 		--exp_dir=experiments/${ename} | tee experiments/semseg_baseline_drn_d_54_512X512_ep500.txt
+
+python semseg_baseline.py \
+		-d /ssd_scratch/cvit/furqan.shaik/cityscapes/cityscapes train \
+		-c 19 --epochs 200 --lr 0.01 -b 20 --arch drn_d_22 \
+		--exp_dir experiments/cityscapes_drn_d_22_200_512X512 | tee experiments/semseg_baseline_drn_d_22_512X512_ep100.txt
+
+python seg_video.py --pretrained drn_d_22_cityscapes.pth --arch drn_d_22 | tee log.txt

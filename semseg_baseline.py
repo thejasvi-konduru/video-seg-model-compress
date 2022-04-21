@@ -37,7 +37,6 @@ from cityscapes_dataset import SegList, SegListMS
 # from ade20k_dataset import *
 # from pthflops import count_ops
 
-
 FORMAT = "[%(asctime)-15s %(filename)s:%(lineno)d %(funcName)s] %(message)s"
 logging.basicConfig(format=FORMAT)
 logger = logging.getLogger(__name__)
@@ -73,7 +72,7 @@ TRIPLET_PALETTE = np.asarray([
 
 import wandb
 
-wandb.init(project='ade20k_semseg_baseline', entity='furqan7007')
+wandb.init(project='cityscapes_semseg_baseline', entity='furqan7007')
 
 # writer = SummaryWriter("sem_baseline_runs")
 
@@ -910,9 +909,9 @@ def main():
                 exit()
 
         if args.epochs == 100:
-            if args.resume:
-                milestones = [start_epoch+25, start_epoch+50,start_epoch+70]
-                gamma = 0.1
+            # if args.resume:
+            milestones = [start_epoch+25, start_epoch+50,start_epoch+70]
+            gamma = 0.1
 
         elif args.epochs == 150:
             if args.resume:
@@ -989,14 +988,17 @@ def main():
                 best_miou = max(miou1,best_miou)
                 best_epoch = epoch
 
-            save_checkpoint({
-            'epoch': epoch + 1,
-            'arch': args.arch,
-            'state_dict': model.state_dict(),
-            'best_miou': best_miou,
-            'optimizer' : optimizer.state_dict(),
-            'dataset' : args.dataset
-            }, is_best_miou, save_path)
+            for params in model.state_dict():
+                print(params)
+            exit()
+            # save_checkpoint({
+            # 'epoch': epoch + 1,
+            # 'arch': args.arch,
+            # 'state_dict': model.state_dict(),
+            # 'best_miou': best_miou,
+            # 'optimizer' : optimizer.state_dict(),
+            # 'dataset' : args.dataset
+            # }, is_best_miou, save_path)
 
                 # if (epoch + 1) % args.save_iter == 0:
                 #     history_path = os.path.join(save_path, 'checkpoint_{:03d}.pth.tar'.format(epoch + 1))
