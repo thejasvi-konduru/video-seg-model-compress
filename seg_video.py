@@ -1,4 +1,3 @@
-
 import argparse
 # from matplotlib import image
 import matplotlib
@@ -114,7 +113,7 @@ def FrameCapture(video_path, model):
     vidObj = cv2.VideoCapture(video_path)
     count = 0
     success = 1
-    images = torch.zeros((100, 3, 512, 512))
+    images = torch.zeros((25, 3, 256, 256))
     raw_images = []
     info = json.load(open('info.json'))
     normalize = transforms.Normalize(mean=info['mean'],
@@ -125,7 +124,8 @@ def FrameCapture(video_path, model):
         
         img = Image.fromarray(image, 'RGB')
         # print(type(img))
-        image_transform = T.Resize((512,512))
+        image_transform = T.Resize((256,256))
+        image_transform = T.Resize((300,300))
         img = image_transform(img)
         print("Image shape", img.size)
         raw_images.append(img)
@@ -136,7 +136,7 @@ def FrameCapture(video_path, model):
         # print(resized_img[0])
         images[i] = resized_img[0]
         i += 1
-        if i == 100:
+        if i == 25:
             break
         
     print(f"Shape of each frame is {images.shape}")
@@ -148,12 +148,15 @@ def FrameCapture(video_path, model):
     print(f"shape of images after transpose is {images[1].shape}")
     print(f"raw images shape", len(raw_images))
 
+    start1=time.time()
     plt.ion()
     # ax1=plt.subplot(111)
     figure, ax1 = plt.subplots(figsize=(25, 25))
     model.eval()
+    list_with_plot=[]
     for i in range(len(images)):
-        img = torch.unsqueeze(images[i], dim=0).cuda()
+        start2=time.time()
+        img = torch.unsqueeze(images[i], dim=0)
         # img = images[i]
         final = model(img)[0]
         # final = torch.squeeze(final, dim=0)
@@ -196,7 +199,6 @@ def FrameCapture(video_path, model):
 
         im1=ax1.imshow(inp_img)
         im1.set_data(inp_img)
-        figure.canvas.draw()
         im2=ax1.imshow(color_image,alpha=0.6)
         im2.set_data(color_image)
 
@@ -205,6 +207,11 @@ def FrameCapture(video_path, model):
         # ax1.imshow(color_image)
         figure.canvas.draw()
         figure.canvas.flush_events()
+        end2=time.time()
+        list_with_plot.append(end2-start2)
+    end1=time.time()
+    print("Total time including plotting",end1-start1)
+    print("List of times for all images which includes plotting",list_with_plot)
 
         
     # cv2.imwrite(f"frames_output/frame_{count}.jpg", image)
@@ -266,27 +273,19 @@ def main():
         if args.pretrained:
             model.load_state_dict(torch.load(args.pretrained))
         print(model)
+        
+        model=model.cuda()
+        model.eval()
+        import time
+        print("name, ofm, ifm, kh, kw, ih, iw, oh, ow, groups, M, K, N, flops")
+        input = torch.randn(26,3,512,512).cuda()
+        time1=time.time()
+        output = model(input)
+        time2=time.time()
+        print(time2-time1)
+
         # checkpoint = torch.load(args.pretrained)
         # print("checkpoint layers")
         # for params_check in checkpoint['state_dict']:
-        #     print(params_check)
-        #     new_param = params_check.replace("layer", "base")
-        #     print(new_param)
-        #     model.state_dict()[new_param] = checkpoint['state_dict'][params_check]
-        
-        # for params in model.state_dict():
-        #     print(params)
-        # # start_epoch = checkpoint['epoch']
-        # # #best_prec1 = checkpoint['best_prec1']
-        # # best_miou = checkpoint['best_miou']
-        # model.load_state_dict(checkpoint['state_dict'])
-        # # if args.pretrained:
-        #     single_model.load_state_dict(torch.load(args.pretrained, map_location="cpu"))
-        # model = torch.nn.DataParallel(model).cuda()
-        model = model
-        video_path = "mit_driveseg_sample.mp4"
-        FrameCapture(video_path, model)
-
-
-if __name__ == '__main__':
-    main()
+        #     print(paramsdef main():
+ _check)
